@@ -272,6 +272,44 @@ paths:
   #   aucun itinéraire composé. Sans lancer direct ce jour-là, la liste est vide.
   #   Opération PUBLIQUE.
 
+  /trips/search:
+    post:
+      tags: [Découverte]
+      operationId: searchTrips
+      summary: Rechercher un lancer
+      description: |
+        Retourne les lancers directs reliant deux villes à la date demandée.
+        Sans lancer direct ce jour-là, la liste est vide : ce n'est pas une erreur.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripSearchRequest'
+      responses:
+        '200':
+          description: Lancers correspondants. Tableau vide si aucun.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TripSummary'
+              example:
+                - id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+                  departureCity:
+                    id: 3f1c2a9e-7b4d-4c1a-9e8f-2d5b6a7c8e90
+                    name: Dijon
+                  arrivalCity:
+                    id: 9b2d4e6f-1a3c-4b5d-8e7f-0a1b2c3d4e5f
+                    name: Paris
+                  departureAt: '2027-03-15T09:30:00Z'
+                  durationMinutes: 45
+                  price: 29.90
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+
   # GET /trips/{id}
   #   Consulter le détail d'un lancer. Le détail porte ce qu'une liste de
   #   résultats n'a aucune raison de transporter pour chacune de ses lignes.
@@ -547,6 +585,28 @@ components:
         name:
           type: string
           example: Dijon
+
+    TripSearchRequest:
+      type: object
+      description: Critères de recherche d'un lancer.
+      required: [departureCityId, arrivalCityId, date, passengers]
+      properties:
+        departureCityId:
+          type: string
+          format: uuid
+          example: 3f1c2a9e-7b4d-4c1a-9e8f-2d5b6a7c8e90
+        arrivalCityId:
+          type: string
+          format: uuid
+          example: 9b2d4e6f-1a3c-4b5d-8e7f-0a1b2c3d4e5f
+        date:
+          type: string
+          format: date
+          example: '2027-03-15'
+        passengers:
+          type: integer
+          minimum: 1
+          example: 2
 
     # TripSummary
     #   Un lancer tel qu'il apparaît dans une liste de résultats : de quoi
