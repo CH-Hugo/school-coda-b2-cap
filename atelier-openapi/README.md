@@ -83,3 +83,22 @@ Vous pouvez importer `openapi.yaml` dans Bruno pour générer votre collection :
 requêtes viennent de votre propre contrat.
 
 N'écrivez pas les douze opérations avant de tester la première.
+
+
+
+## Utilisation de l'IA
+
+J'ai utilisé l'ia pendant le TP, surtout pour comprendre et me faire accompagner sur l'exercice.
+CI dessous, la manière dont je l'ai utilisé au cours de la journée.
+
+Je m'en suis servi pour :
+- comprendre le sujet.
+- comprendre la syntaxe OpenAPI (paramètres, requestBody, $ref, les types).
+- débloquer des erreurs comme Prism qui plantait et également la variable baseUrl dans Bruno.
+- vérifier les types des champs et les codes de retour (200, 400, 422).
+
+## Vérification
+
+Testé avec Prism et Bruno :
+- GET /cities → 200
+- POST /trips/search → 200, et 422 avec passengers à 0
