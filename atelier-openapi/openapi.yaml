@@ -551,6 +551,31 @@ components:
     # TripSummary
     #   Un lancer tel qu'il apparaît dans une liste de résultats : de quoi
     #   choisir, pas de quoi préparer son voyage.
+    TripSummary:
+      type: object
+      description: Lancer tel qu'il apparaît dans une liste de résultats.
+      required: [id, departureCity, arrivalCity, departureAt, durationMinutes, price]
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+        departureCity:
+          $ref: '#/components/schemas/City'
+        arrivalCity:
+          $ref: '#/components/schemas/City'
+        departureAt:
+          type: string
+          format: date-time
+          example: '2027-03-15T09:30:00Z'
+        durationMinutes:
+          type: integer
+          minimum: 1
+          example: 45
+        price:
+          type: number
+          minimum: 0
+          example: 29.90
 
     # TripDetail
     #   Le même lancer, consulté seul. Il ajoute ce dont on a besoin une fois
