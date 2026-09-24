@@ -315,6 +315,46 @@ paths:
   #   résultats n'a aucune raison de transporter pour chacune de ses lignes.
   #   Opération PUBLIQUE.
 
+  /trips/{id}:
+    get:
+      tags: [Découverte]
+      operationId: getTrip
+      summary: Consulter le détail d'un lancer
+      description: |
+        Retourne le détail d'un lancer, dont la franchise de masse, qui est
+        balistique et propre à chaque lancer.
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identifiant du lancer.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Détail du lancer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TripDetail'
+              example:
+                id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+                departureCity:
+                  id: 3f1c2a9e-7b4d-4c1a-9e8f-2d5b6a7c8e90
+                  name: Dijon
+                arrivalCity:
+                  id: 9b2d4e6f-1a3c-4b5d-8e7f-0a1b2c3d4e5f
+                  name: Paris
+                departureAt: '2027-03-15T09:30:00Z'
+                durationMinutes: 45
+                price: 29.90
+                baggageAllowanceKg: 20
+                catapultModel: Trébuchet MK-IV
+                boardingInstructions: Présentez-vous 15 minutes avant le lancer.
+        '404': { $ref: '#/components/responses/NotFound' }
+
   # ---- Panier (authentifié) ------------------------------------------------
 
   # POST /carts
@@ -641,6 +681,24 @@ components:
     #   Le même lancer, consulté seul. Il ajoute ce dont on a besoin une fois
     #   qu'on l'a choisi — notamment la franchise de masse, qui n'est pas ici
     #   une limite commerciale mais balistique.
+    TripDetail:
+      description: Lancer consulté seul, avec les informations utiles au voyage.
+      allOf:
+        - $ref: '#/components/schemas/TripSummary'
+        - type: object
+          required: [baggageAllowanceKg, catapultModel, boardingInstructions]
+          properties:
+            baggageAllowanceKg:
+              type: number
+              minimum: 0
+              example: 20
+            catapultModel:
+              type: string
+              example: Trébuchet MK-IV
+            boardingInstructions:
+              type: string
+              example: Présentez-vous 15 minutes avant le lancer.
+
 
     # Cart
     #   Un panier de réservation. Il connaît son état, ses lignes, et son total.
